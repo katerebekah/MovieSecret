@@ -1,11 +1,12 @@
+var UserController = require('../userController');
 var express = require('express');
 var router = express.Router();
+var confessionList = [];
 var Confession = require('../models/confession');
 
 
-
 // Send the error message back to the client
-var sendError = function(req, res, err, message) {
+var sendError = function (req, res, err, message) {
   res.render("error", {
     error: {
       status: 500,
@@ -15,7 +16,7 @@ var sendError = function(req, res, err, message) {
   });
 };
 
-/* GET home page. */
+//tells node to send confessions for initial profile page load
 router.get('/', function(req, res, next) {
   //database call for all secrets
   Confession.find({}, function(err, confessions) {
@@ -31,6 +32,10 @@ router.get('/', function(req, res, next) {
       });
     }
   });
+});
+
+router.post('/', function(req, res, next){
+	
 });
 
 module.exports = router;

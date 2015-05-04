@@ -1,27 +1,68 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	
-</head>
-<body>
-<div style="height: 700px; width: 700px; background-color: blue">
-<h1 style="color : white">Movie Secrets Registration Page!</h1>
-<h2 style="color : red">You haven't registered Yet?</h2>
-<img src="https://pbs.twimg.com/profile_images/422240966871769088/oXjMc_ij_400x400.jpeg" width="300" height="300">
-<form action="demo_form.asp">
-<p style="color: white"> First name: </p><input style= "width: 250px" type="text" name="FirstName" value=""><br>
-<p style="color: white"> Last name: </p> <input style= "width: 250px" type="text" name="LastName" value=""><br>
-<p style="color: white"> Email Address: </p><input style= "width: 250px" type="email" name="LastName" value=""><br>
-<p style="color: white"> Age: </p><input style= "width: 25px" type="text" name="LastName" value=""><br><br>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <script src="/javascripts/vendor/modernizr.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
 
-<input type="submit" value="Enter">
-</form>
+    <h1 class="header"><%= title %></h1>
+    <h3 class="font"><%= subtitle %></h3>
+		<div class="row">
+		<div class="large-6 columns">
+			
+		<img src="https://pbs.twimg.com/profile_images/422240966871769088/oXjMc_ij_400x400.jpeg" width="300" height="300">
+		<h4 class="font" style="color : red">You haven't registered Yet?</h4>
+		</div>
+		<div id="registration" class="large-6 columns">
+			<form method="POST" action="/user/register">
+				<div class="row">
+		    	<div class="large-9 columns">
+		      	<label>Username
+		        	<input type="text" name="username" />
+		      	</label>
+		    	</div>
+		 		</div>
+				<div class="row">
+		    	<div class="large-9 columns">
+		      	<label>Email
+		        	<input type="email" name="email" />
+		      	</label>
+		    	</div>
+		 		</div>
+				<div class="row">
+		    	<div class="large-9 columns">
+		      	<label>Password
+		        	<input type="password" name="password" />
+		      	</label>
+		    	</div>
+		 		</div>
+				<div class="row">
+		    	<div class="large-9 columns">
+		      	<label>Confirm Password
+		        	<input type="password" name="confirmPassword" />
+		      	</label>
+		    	</div>
+		 		</div>
+		 		<div class="row">
+		    	<div class="large-5 columns">
+		 		<input type="submit" class="button font" value="Register" name="submit">
+		 		</div>
+		    	<div class="large-7 columns">
+		    	<p>   ...or <a href="/user/login">Log In</a> here</p>
+		    	</div>
+		</form>
+		</div>
+		</div>
 
 
-</div>
-
-</body>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
+    <script>
+       $(document).foundation();
+     </script>
+  </body>
 </html>
-
- 

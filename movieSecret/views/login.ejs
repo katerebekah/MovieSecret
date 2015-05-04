@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>    
+    <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <script src="/javascripts/vendor/modernizr.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+    <h1 class="header"><%= title %></h1>
+    <h3 class="font"><%= subtitle %></h3>
+    <div class="row"><!-- 
+    <div class="large-6 columns"></div> -->
+    <div id="login" class="large-6 large-centered columns">
+    		<form method="POST" action="/user/login">
+		    <div class="row">
+          <div class="large-9 columns">
+            <label>Username
+              <input type="text" name="username" />
+            </label>
+          </div>
+        </div>
+          <div class="row">
+            <div class="large-9 columns">
+              <label>Password
+                <input type="password" name="password" />
+              </label>
+            </div>
+          </div><div class="row">
+          <div class="large-4 columns">
+        <input type="submit" class="button font" value="Log In" name="submit">
+        </div>
+          <div class="large-8 columns">
+          <p>   ...or <a href="/user/register">Register</a> here</p>
+          </div>
+    </div>
+		</form>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
+    <script>
+       $(document).foundation();
+     </script>
+  </body>
+</html>

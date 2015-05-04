@@ -40,7 +40,10 @@ var getUserTasks = function (userId) {
 
 // Handle the request for the registration form
 app.get("/register", function (req, res) {
-  res.render("register");
+  res.render("register", {
+    title: "Movie Secret",
+    subtitle: "confess your darkest movie secrets"
+  });
 });
 
 
@@ -52,11 +55,18 @@ app.post("/register", function (req, res) {
     if (err) {
       sendError(req, res, err, "Failed to register user");
     } else {
-      res.redirect("/");
+      res.redirect("/profile");
     }
   });
 });
 
+// Handle the request for the log in form
+app.get("/login", function (req, res) {
+  res.render("login", {
+    title: "Movie Secret",
+    subtitle: "confess your darkest movie secrets"
+  });
+});
 
 // Handle the login action
 app.post("/login", function (req, res) {
@@ -78,7 +88,7 @@ app.post("/login", function (req, res) {
       getUserTasks(validUser._id)
         .then(function (tasks) {
           // Render the todo list
-          res.redirect("/todo/list");
+          res.redirect("/profile");
         })
         .fail(function (err) {
           sendError(req, res, {errors: err.message}, "Failed")

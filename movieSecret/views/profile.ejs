@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="css/foundation.css">
+    <script src="js/vendor/modernizr.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+    <h1 class="header"><%= title %></h1>
+    <h3 class="font"><%= subtitle %></h3>
+
+    <form method="POST" action="/profile">
+      <div>
+        <label>I have never seen</label><input type="text" class="input" name="neverSeen" id="neverSeen">
+      </div>
+    </form>
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+       $(document).foundation();
+    </script>
+    <script src="/javascripts/autofill.js"></script>  
+    
+  </body>
+</html>
