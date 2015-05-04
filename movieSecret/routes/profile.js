@@ -4,6 +4,54 @@ var router = express.Router();
 var confessionList = [];
 var Confession = require('../models/confession');
 
+//Post Confession to database
+router.post('/', function(req, res, next) {
+	// If user is editing a confession
+	if (req.body.db_id !== "") {
+		//Find it
+		Confession.findOne({ _id: req.body.db_id}, function (err, foundconfession) {
+			if(err) {
+				sendError(req, res, err, "could not find this confession");
+			} else {
+				//found confession------ update
+				foundconfession.confession = req.body.confession;
+				foundconfession.post_date = Date.now;
+
+				// save updated item
+				foundconfession.save(function (err, newOne) {
+				  if (err) {
+				  	sendError(req, res, err, "Could not save with updated Confession");
+				  } else {
+				  	console.log("Edit Succesful");
+				  }
+
+				});
+			}
+		});
+
+	} else {
+		// User created new item
+		// Find user
+
+		var theUser = UserController.getCurrentUser();
+
+		// What did the user enter in the form?
+		var theFormPostData = req.body
+		theFormPostData.user = theUser._id;
+
+		console.log('theFormPostData',theFormPostData);
+
+		 var myconfession = new Confession(theFormPostData);
+
+		 myconfession.save(function (err, confession) {
+		 	if(err) {
+		 		console.log("New Todo is Saved");
+		 	}
+		 });
+	}
+});
+	
+
 //get profile page
 router.get('/', function(req, res, next) {
 	//database call for all secrets
