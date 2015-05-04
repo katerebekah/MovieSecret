@@ -6,7 +6,7 @@ var Confession = require('../models/confession');
 
 //Post Confession to database
 router.post('/', function(req, res, next) {
-	// If user is editing a confession
+/*	// If user is editing a confession
 	if (req.body.db_id !== "") {
 		//Find it
 		Confession.findOne({ _id: req.body.db_id}, function (err, foundconfession) {
@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
 			}
 		});
 
-	} else {
+	} else {*/
 		// User created new item
 		// Find user
 
@@ -45,10 +45,13 @@ router.post('/', function(req, res, next) {
 
 		 myconfession.save(function (err, confession) {
 		 	if(err) {
-		 		console.log("New Todo is Saved");
+		 		sendError(req, res, err, "Could not add new confession");
+		 	} else {
+		 		console.log("New confession is Saved");
+		 		res.redirect('/');	
 		 	}
 		 });
-	}
+//	}
 });
 	
 
