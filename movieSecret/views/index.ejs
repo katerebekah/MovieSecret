@@ -2,8 +2,8 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="css/foundation.css">
-    <script src="js/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <script src="/javascripts/vendor/modernizr.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
@@ -11,24 +11,26 @@
     <h1 class="header"><%= title %></h1>
     <h3 class="font"><%= subtitle %></h3>
 
-    <a href="/user/login">Log In</a>
-    <a href="/user/register">Register</a>
-
+    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/profile">Profile</a></p>
+    
+    <div class="confessions">
     <% for (var i = 0; i < confessions.length; i++) { %>
-		<div class="row">
       <% var newSecret = confessions[i]; %>
-      <div class="confession-item" id="confession_<%= newSecret._id %>">
-        <div>
-          <h3>I have never seen <%= newSecret.confession %></h3>
+        <div class="row confession" id="confession_<%= newSecret._id %>">
+          <div class="large-8 columns">
+            <h3>I have never seen <%= newSecret.confession %></h3>
+          </div>
+          <div class="large-4 columns">
+          <p>Insert API data here</p>
+          </div>
         </div>
-      </div>
-      </div>
     <% } %>
+    </div>
 
     
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="js/foundation.min.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
     <script>
        $(document).foundation();
      </script>

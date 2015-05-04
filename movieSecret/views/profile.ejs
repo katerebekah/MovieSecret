@@ -2,8 +2,8 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel="stylesheet" href="css/foundation.css">
-    <script src="js/vendor/modernizr.js"></script>
+    <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <script src="/javascripts/vendor/modernizr.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
@@ -11,15 +11,49 @@
     <h1 class="header"><%= title %></h1>
     <h3 class="font"><%= subtitle %></h3>
 
-    <form method="POST" action="/profile">
-      <div>
-        <label>I have never seen</label><input type="text" class="input" name="confession" id="neverSeen">
-      </div>
-      <input type="submit" class="button font" value="confess">
-    </form>
+    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/">Home</a></p>
+
+    <div class="row confession">
+      <form method="POST" action="/profile">
+        <div class="large-4 columns">
+          <select>
+            <option value="neverSeen">I have never seen </option>
+            <option value="secretLove">I secretly love </option>
+            <option value="secretCrush">I have a secret crush on </option>
+            <option value="cantStand">I can't stand </option>
+          </select>
+        </div>
+        <div class="large-4 columns">
+          <input type="text" class="input" name="confession" id="neverSeen">
+        </div>
+        <div class="large-4 columns">
+          <input type="submit" class="button font" value="confess">
+        </div>
+      </form>
+    </div>
+
+    <div class="confessions">
+    <% for (var i = 0; i < confessions.length; i++) { %>
+      <% var newSecret = confessions[i]; %>
+        <div class="row confession" id="confession_<%= newSecret._id %>">
+          <div class="large-8 columns">
+            <h3>I have never seen <%= newSecret.confession %></h3>
+          </div>
+          <div class="large-2 columns">
+            <input type="submit" class="button font" value="Edit" name="submit">
+          </div>
+          <div class="large-2 columns">
+            <input type="submit" class="button font" value="Delete" name="submit">
+          </div>
+        </div>
+    <% } %>
+    </div>
+
+
+
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="js/foundation.min.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
     <script>
        $(document).foundation();
     </script>

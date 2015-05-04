@@ -2,7 +2,7 @@
 
 body {
 	background-image: url('/images/background.png');
-	background-position: fixed;
+	background-attachment: fixed;
 	background-repeat: no-repeat;
 	background-size:cover;
 	font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -14,7 +14,8 @@ a {
   color: #ff5555;
 }
 .font {
-	font-family: "Love Ya Like A Sister", Helvetica, Arial, sans-serif;
+	font: 1.5em "Love Ya Like A Sister", Helvetica, Arial, sans-serif;
+
 }
 .header {
   font: 7em "Love Ya Like A Sister", Helvetica, Arial, sans-serif;
@@ -31,4 +32,13 @@ form {
 label {
 	color: #aaa;
 	font-size: .9em;
+}
+.confession {
+	background: rgba(0, 0, 0, .2);
+	border: 7px solid #000;
+	padding: 10px;
+	margin-top:15px;
+}
+.confessions {
+	margin-top: 50px;
 }
