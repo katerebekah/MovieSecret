@@ -37,7 +37,8 @@ router.get('/:id', function(req, res) {
 //Post Confession to database
 router.post('/', function(req, res, next) {
     // If user is editing a confession
-    if (req.body.db_id !== "") {
+    console.log(req.body);
+    if (req.body.db_id) {
         //Find it
         Confession.findOne({
             _id: req.body.db_id
@@ -80,7 +81,7 @@ router.post('/', function(req, res, next) {
                 sendError(req, res, err, "Could not add new confession");
             } else {
                 console.log("New confession is Saved");
-                res.redirect('/');
+                res.redirect('/profile');
             }
         });
     }
@@ -111,7 +112,7 @@ router.get('/', function(req, res, next) {
 // Delete function
 router.delete('/', function(req, res, next) {
     Confession.find({
-            _id: req.body.confession_id
+            _id: req.body.confession
         })
         .remove(function(err) {
             if (!err) {
