@@ -11,7 +11,8 @@
     <h1 class="header"><%= title %></h1>
     <h3 class="font"><%= subtitle %></h3>
 
-    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/">Home</a></p>
+    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/profile">Profile</a></p>
+    
 
     <div class="row confession">
       <form method="POST" action="/profile">
@@ -24,42 +25,19 @@
           </select>
         </div>
         <div class="large-4 columns">
-          <input type="text" class="input" name="confession" id="neverSeen">
+                    <input type="hidden" name="db_id" value="<%= thisItem._id %>">
+          <input type="text" class="input" name="confession" id="neverSeen" value="<%= thisItem.confession %>">
         </div>
         <div class="large-4 columns">
           <input type="submit" class="button font" value="confess">
         </div>
       </form>
-    </div>
-
-    <div class="confessions">
-    <% for (var i = 0; i < confessions.length; i++) { %>
-      <% var newSecret = confessions[i]; %>
-        <div class="row confession" id="<%= newSecret._id %>">
-          <div class="large-8 columns">
-            <input type="hidden" name="db_id" value="<%= newSecret._id %>">
-            <h3>I have never seen <%= newSecret.confession %></h3>
-          </div>
-          <div class="large-2 columns">
-            <input type="submit" class="button font editButton" id="<%= newSecret._id %>" value="Edit" name="submit">
-          </div>
-          <div class="large-2 columns">
-            <input type="submit" class="button font deleteButton" id="<%= newSecret._id %>" value="Delete" name="submit">
-          </div>
-        </div>
-    <% } %>
-    </div>
-
-
-
+    </div>        
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="/javascripts/foundation.min.js"></script>
     <script>
-       $(document).foundation();
+      $(document).foundation();
     </script>
-    <script src="/javascripts/autofill.js"></script>  
-    <script src="/javascripts/confessionHandler.js"></script>
-    
   </body>
 </html>

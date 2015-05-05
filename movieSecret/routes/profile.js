@@ -5,9 +5,36 @@ var router = express.Router();
 var confessionList = [];
 var Confession = require('../models/confession');
 
+// Handle a GET request from the client to /profile/:id
+router.get('/:id', function (req, res) {
+	console.log("edit called");
+  // Is the user logged in?
+  if (UserController.getCurrentUser() === null) {
+    res.redirect("/");
+  }
+
+  Confession.find({ _id: req.params.id }, function (err, item) {
+    var thisItem = item[0];
+    console.log(thisItem);
+
+    // Was there an error when retrieving?
+    if (err) {
+      sendError(req, res, err, "Could not find a task with that id");
+
+    // Find was successful
+    } else {
+      res.render('edit', {
+        title : 'Movie Secret',
+        subtitle: "confess your darkest movie secrets",
+        thisItem: thisItem
+      });
+    }
+  });
+});
+
 //Post Confession to database
 router.post('/', function(req, res, next) {
-  /*	// If user is editing a confession
+  	// If user is editing a confession
   	if (req.body.db_id !== "") {
   		//Find it
   		Confession.findOne({ _id: req.body.db_id}, function (err, foundconfession) {
@@ -16,7 +43,6 @@ router.post('/', function(req, res, next) {
   			} else {
   				//found confession------ update
   				foundconfession.confession = req.body.confession;
-  				foundconfession.post_date = Date.now;
 
   				// save updated item
   				foundconfession.save(function (err, newOne) {
@@ -24,13 +50,14 @@ router.post('/', function(req, res, next) {
   				  	sendError(req, res, err, "Could not save with updated Confession");
   				  } else {
   				  	console.log("Edit Succesful");
+  				  	res.redirect('/profile');
   				  }
 
   				});
   			}
   		});
 
-  	} else {*/
+  	} else {
   // User created new item
   // Find user
 
@@ -52,7 +79,7 @@ router.post('/', function(req, res, next) {
       res.redirect('/');
     }
   });
-  //	}
+  	}
 });
 
 
