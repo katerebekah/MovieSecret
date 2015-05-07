@@ -3,6 +3,7 @@
   <head>
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="/javascripts/vendor/modernizr.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
@@ -13,23 +14,18 @@
 
     <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/">Home</a></p>
 
-    <div class="row confession">
-      <form method="POST" action="/profile">
+    <div class="row">
+      <form id="confess">
         <div class="large-4 columns">
-          <select>
-            <option value="neverSeen">I have never seen </option>
-            <option value="secretLove">I secretly love </option>
-            <option value="secretCrush">I have a secret crush on </option>
-            <option value="cantStand">I can't stand </option>
-          </select>
+          <h3>I have never seen</h3>
         </div>
         <div class="large-4 columns">
-          <input type="text" class="input" name="confession" id="neverSeen">
+          <input type="text" class="input" name="confession" id="confession">
         </div>
-        <div class="large-4 columns">
-          <input type="submit" class="button font" value="confess">
+        <div class="large-4 columns ui-front">
+          <button class="button font confess" value="confess">confess</button>
         </div>
-      </form>
+        </form>
     </div>
 
     <div class="confessions">
