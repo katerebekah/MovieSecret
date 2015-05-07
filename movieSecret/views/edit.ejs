@@ -3,6 +3,7 @@
   <head>
     <title><%= title %></title>
     <link rel="stylesheet" href="/stylesheets/foundation.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     <script src="/javascripts/vendor/modernizr.js"></script>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
@@ -14,30 +15,27 @@
     <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/profile">Profile</a></p>
     
 
-    <div class="row confession">
-      <form method="POST" action="/profile">
+    <div class="row">
+      <form id="confess">
         <div class="large-4 columns">
-          <select>
-            <option value="neverSeen">I have never seen </option>
-            <option value="secretLove">I secretly love </option>
-            <option value="secretCrush">I have a secret crush on </option>
-            <option value="cantStand">I can't stand </option>
-          </select>
+          <h3 class="right">I have never seen</h3>
         </div>
         <div class="large-4 columns">
-                    <input type="hidden" name="db_id" value="<%= thisItem._id %>">
-          <input type="text" class="input" name="confession" id="neverSeen" value="<%= thisItem.confession %>">
+          <input type="text" class="input" name="confession" id="confession">
         </div>
-        <div class="large-4 columns">
-          <input type="submit" class="button font" value="confess">
+        <div class="large-4 columns ui-front">
+          <button class="button font confess" value="confess">confess</button>
         </div>
-      </form>
-    </div>        
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-    <script src="/javascripts/foundation.min.js"></script>
-    <script>
-      $(document).foundation();
-    </script>
+        </form>
+    </div>
+
+       <script src="/javascripts/vendor/jquery.js"></script>
+       <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+       <script src="/javascripts/foundation.min.js"></script>
+       <script>
+          $(document).foundation();
+       </script>
+       <script src="/javascripts/autofill.js"></script>  
+       
   </body>
 </html>

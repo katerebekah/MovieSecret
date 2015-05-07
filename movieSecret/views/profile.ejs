@@ -17,7 +17,7 @@
     <div class="row">
       <form id="confess">
         <div class="large-4 columns">
-          <h3>I have never seen</h3>
+          <h3 class="right">I have never seen</h3>
         </div>
         <div class="large-4 columns">
           <input type="text" class="input" name="confession" id="confession">
@@ -31,24 +31,26 @@
     <div class="confessions">
     <% for (var i = 0; i < confessions.length; i++) { %>
       <% var newSecret = confessions[i]; %>
-        <div class="row confession" id="<%= newSecret._id %>">
-          <div class="large-8 columns">
-            <input type="hidden" name="db_id" value="<%= newSecret._id %>">
-            <h3>I have never seen <%= newSecret.confession %></h3>
+      <div class="confession row" id="<%= newSecret._id %>">
+        <div class="large-8 columns right">
+                <input type="hidden" name="db_id" value="<%= newSecret._id %>">
+                <h3>I have never seen <%= newSecret.confession %><% if (newSecret.year !== '') { %> (<%= newSecret.year %>)<% }%> </h3>
+                <% if (newSecret.awards !== '') { %><p class="awards"><%= newSecret.awards %></p><% } %>
+                  <input type="submit" class="button font editButton" id="<%= newSecret._id %>" value="Edit" name="submit">
+                  <input type="submit" class="button font deleteButton" id="<%= newSecret._id %>" value="Delete" name="submit">
+            </div>
+          <div class="large-4 columns">
+              <% if (newSecret.poster !== '') { %>
+              <img src="<%= newSecret.poster %>" alt="<%= newSecret.confession %>">
+              <% } %>
           </div>
-          <div class="large-2 columns">
-            <input type="submit" class="button font editButton" id="<%= newSecret._id %>" value="Edit" name="submit">
-          </div>
-          <div class="large-2 columns">
-            <input type="submit" class="button font deleteButton" id="<%= newSecret._id %>" value="Delete" name="submit">
-          </div>
-        </div>
-    <% } %>
+      </div>
+            <% } %>
     </div>
 
 
 
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/javascripts/vendor/jquery.js"></script>
     <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="/javascripts/foundation.min.js"></script>
     <script>

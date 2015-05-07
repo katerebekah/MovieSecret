@@ -1,41 +1,51 @@
 $(function() {
+  //create a var to hold API dummy data (just in case it isn't selected) and the real selected data
+  var dData = {};
   var formData = {};
   var newInput = '';
   $('.input').autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: "http://www.omdbapi.com/?t=" + request.term + "&r=json&callback",
-          dataType: "jsonp",
-          success: function(data) {
-            //save API data for later save with the form
-            formData.year = data.Year;
-            formData.poster = data.Poster;
-            formData.awards = data.Awards;
-            //reformat data for browser display
-            var obj = {};
-            var arr = [];
-            obj.label= data.Title;
-            obj.title= data.Title;
-            arr.push(obj);
-            //send reformatted data
-            response(arr);
-          }
-        });
-      },
-      minLength: 3,
-      select: function(event, ui) {
-        //if the item is selected, send the saved API data to the form
-        if (ui.item.label) {
-          console.log(formData);
-        };
+    source: function(request, response) {
+      $.ajax({
+        url: "http://www.omdbapi.com/?t=" + request.term + "&r=json&callback",
+        dataType: "jsonp",
+        success: function(data) {
+          //save API data (dummy data until item is selected) for later save with the form
+          dData.year = data.Year;
+          dData.poster = data.Poster;
+          dData.awards = data.Awards;
+          //reformat data for browser display
+          var obj = {};
+          var arr = [];
+          obj.label = data.Title;
+          obj.title = data.Title;
+          arr.push(obj);
+          //send reformatted data
+          response(arr);
+        }
+      });
+    },
+    minLength: 3,
+    select: function(event, ui) {
+      if (ui.item.label) {
+        //save dummy data to actual form data because the item was selected
+        formData = dData;
+      }
     }
   });
 
-  $('.confess').click(function(e){
+  //form post submit
+  $('.confess').click(function(e) {
+    //prevent form posting automatically
     e.preventDefault();
+    //create variable to hold all the data to be submitted
     var fdata = {};
+    //from the user input
     fdata.confession = $('#confession').val();
-    fdata.apiData = formData;
+    //from the saved API data
+    fdata.poster = formData.poster;
+    fdata.awards = formData.awards;
+    fdata.year = formData.year;
+    //post form and reload page
     $.ajax({
       url: "/profile",
       method: "POST",

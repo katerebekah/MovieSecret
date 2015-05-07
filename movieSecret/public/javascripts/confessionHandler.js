@@ -3,7 +3,6 @@ $(document).ready(function(){
 	// User clicked on an edit button
 	$(".editButton").click(function () {
 	  var confessionID = $(this)[0].id;
-			  console.log("edit button has fired client side")
 	  window.location.href = "/profile/" + confessionID;
 	});
 
@@ -11,7 +10,6 @@ $(document).ready(function(){
 	$(".deleteButton").click(function () {
 
 	  var confessionID = $(this)[0].id;
-	  console.log(confessionID);
 
 	  $.ajax({
 	    url: "/profile",

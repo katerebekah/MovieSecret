@@ -9,27 +9,17 @@ body {
   color:#ffffff;
   text-align: center;
 }
-/* ul {
-  margin: 0 auto;
-  max-width: 62.5em;
-  width: 100%;
-  }
-li {
-	background-color: red;
-	color: #fff;
-	list-style: none;
-	font-size: 1.5em;
-	text-align:left;
-	margin: 0;
-	padding: 0;
+.awards {
+	font-style: italic;
 }
- */
 a {
   color: #ff5555;
 }
+.right {
+	text-align: right;
+}
 .font {
 	font: 1.5em "Love Ya Like A Sister", Helvetica, Arial, sans-serif;
-
 }
 .header {
   font: 7em "Love Ya Like A Sister", Helvetica, Arial, sans-serif;

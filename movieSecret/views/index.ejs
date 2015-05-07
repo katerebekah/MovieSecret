@@ -16,15 +16,20 @@
     <div class="confessions">
     <% for (var i = 0; i < confessions.length; i++) { %>
       <% var newSecret = confessions[i]; %>
-        <div class="row confession" id="confession_<%= newSecret._id %>">
-          <div class="large-8 columns">
-            <h3>I have never seen <%= newSecret.confession %></h3>
-          </div>
+      <div class="confession row" id="<%= newSecret._id %>">
+        <div class="large-8 columns right">
+                <input type="hidden" name="db_id" value="<%= newSecret._id %>">
+                <h3>I have never seen <%= newSecret.confession %><% if (newSecret.year !== '') { %> (<%= newSecret.year %>)<% }%> </h3>
+                <% if (newSecret.awards !== '') { %><p class="awards"><%= newSecret.awards %></p><% } %>
+                  
+            </div>
           <div class="large-4 columns">
-          <p>Insert API data here</p>
+              <% if (newSecret.poster !== '') { %>
+              <img src="<%= newSecret.poster %>" alt="<%= newSecret.confession %>">
+              <% } %>
           </div>
-        </div>
-    <% } %>
+      </div>
+            <% } %>
     </div>
 
     
