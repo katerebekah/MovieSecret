@@ -4,13 +4,14 @@ var express = require('express');
 var router = express.Router();
 var confessionList = [];
 var Confession = require('../models/confession');
+var User = require('../models/user');
 
-// Handle a GET request from the client to /profile/:id
+// GET request to load edit page with confession to be edited
 router.get('/:id', function(req, res) {
     console.log("edit called");
     // Is the user logged in?
     if (UserController.getCurrentUser() === null) {
-        res.redirect("/");
+        res.redirect("/user/login");
     }
 
     Confession.find({
@@ -168,12 +169,12 @@ var getUserConfessions = function(userId) {
 
     console.log('Another promise to let the calling function know when the database lookup is complete');
 
-    Confession.find({
+    User.findOne({
         user: userId
-    }, function(err, confessions) {
+    }, function(err, user) {
         if (!err) {
-            console.log('confessions found = ' + confessions.length);
-            console.log('No errors when looking up confessions. Resolve the promise (even if none were found).');
+            console.log('user found:', user);
+            console.log(user.confessions.haventSeen);
             deferred.resolve(confessions);
         } else {
             console.log('There was an error looking up confessions. Reject the promise.');

@@ -18,11 +18,15 @@
       <% var newSecret = confessions[i]; %>
       <div class="confession row" id="<%= newSecret._id %>">
         <div class="large-8 columns right">
-                <input type="hidden" name="db_id" value="<%= newSecret._id %>">
                 <h3>I have never seen <%= newSecret.confession %><% if (newSecret.year !== '') { %> (<%= newSecret.year %>)<% }%> </h3>
-                <% if (newSecret.awards !== '') { %><p class="awards"><%= newSecret.awards %></p><% } %>
-                  
-            </div>
+                <p class="awards"><%= newSecret.awards %></p>
+                <label>If you haven't seen this, you can't claim you love film!
+                  <input type="submit" class="button font xButton" id="<%= newSecret._id %>" value="X - This is terrible!" name="submit">
+                </label>
+                <label>Hey, this is no big deal! This movie is overrated anyway!
+                  <input type="submit" class="button font oCount" id="<%= newSecret._id %>" value="O - Overrated" name="submit">
+                </label>
+          </div>
           <div class="large-4 columns">
               <% if (newSecret.poster !== '') { %>
               <img src="<%= newSecret.poster %>" alt="<%= newSecret.confession %>">

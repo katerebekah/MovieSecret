@@ -82,12 +82,12 @@ app.post("/login", function (req, res) {
 
       console.log('Ok, now we are back in the route handling code and have found a user');
       console.log('validUser',validUser);
-      console.log('Find any tasks that are assigned to the user');
+      console.log('Find any confessions that are assigned to the user');
 
-      // Now find the tasks that belong to the user
-      getUserTasks(validUser._id)
-        .then(function (tasks) {
-          // Render the todo list
+      // Now find the confessions that belong to the user
+      getUserConfessions(validUser._id)
+        .then(function (confessions) {
+          // Render the profile
           res.redirect("/profile");
         })
         .fail(function (err) {
@@ -102,20 +102,24 @@ app.post("/login", function (req, res) {
     })
 });
 
-app.get("/profile", function (req, res) {
-  var user = UserController.getCurrentUser();
+var getUserConfessions = function(userId) {
+    var deferred = Q.defer();
 
-  if (user !== null) {
-    getUserTasks(user._id).then(function (tasks) {
-      res.render("userProfile", {
-        username: user.username,
-        tasks: tasks
-      });
-    });
-  } else {
-    res.redirect("/");
-  }
+    console.log('Another promise to let the calling function know when the database lookup is complete');
 
-});
+    User.findOne({_id: userId}, function(err, user) {
+        if (!err) {
+            console.log('user found:', user);
+            console.log(user.confessions.haventSeen);
+            deferred.resolve(confessions);
+        } else {
+            console.log('There was an error looking up confessions. Reject the promise.');
+            deferred.reject(err);
+        }
+    })
+
+    return deferred.promise;
+};
+
 
 module.exports = app;

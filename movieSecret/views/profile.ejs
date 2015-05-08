@@ -35,7 +35,7 @@
         <div class="large-8 columns right">
                 <input type="hidden" name="db_id" value="<%= newSecret._id %>">
                 <h3>I have never seen <%= newSecret.confession %><% if (newSecret.year !== '') { %> (<%= newSecret.year %>)<% }%> </h3>
-                <% if (newSecret.awards !== '') { %><p class="awards"><%= newSecret.awards %></p><% } %>
+                  <p class="awards"><%= newSecret.awards %></p>
                   <input type="submit" class="button font editButton" id="<%= newSecret._id %>" value="Edit" name="submit">
                   <input type="submit" class="button font deleteButton" id="<%= newSecret._id %>" value="Delete" name="submit">
             </div>

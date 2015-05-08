@@ -11,6 +11,9 @@ User.prototype.login = function (username, password) {
   console.log('Let\'s find a user with the same username and password as what was submitted in the form');
 
   UserModel.findOne({username: username}, function (err, user) {
+    if (err){
+      console.log(err);
+    }
     if (!err) {
 
       console.log('We looked for a user and no error.');

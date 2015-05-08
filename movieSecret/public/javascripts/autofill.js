@@ -13,6 +13,7 @@ $(function() {
           dData.year = data.Year;
           dData.poster = data.Poster;
           dData.awards = data.Awards;
+          dDate.imdbID = data.imdbID;
           //reformat data for browser display
           var obj = {};
           var arr = [];
@@ -45,6 +46,7 @@ $(function() {
     fdata.poster = formData.poster;
     fdata.awards = formData.awards;
     fdata.year = formData.year;
+    fdata.imdbID = formData.imdbID;
     //post form and reload page
     $.ajax({
       url: "/profile",

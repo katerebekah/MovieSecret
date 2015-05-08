@@ -1,12 +1,13 @@
 var mongoose = require('mongoose');
 
 var confessionSchema = mongoose.Schema({
-    post_date: {type: Date, required: true, default: Date.now },
     confession: {type: String, required: true, default: ''},
     poster: {type: String, required: false, default: ''},
     year: {type: String, required: false, default: ''},
     awards: {type: String, required: false, default: ''},
-		user: {type: String, required: true}
+    imdbID: {type: String, required: false, default: ''},
+    xCount: {type: Number, required: false, default: 0},
+    oCount: {type: Number, required: false, default: 0}
 });
 var Confession = mongoose.model('Confession', confessionSchema);
 
