@@ -8,11 +8,34 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+      <!--Navigation Bar -->
+      <nav class="top-bar" data-topbar role="navigation" style="background-color: rgba(0, 0, 0, .4)">
+   
 
-    <h1 class="header"><%= title %></h1>
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right" style="background-color: rgba(0, 0, 0, .1)">
+      <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+      <a href="/user/logout" style="background-color: rgba(0, 0, 0, .1)">Log Out</a>
+       
+           
+  </li>
+      <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+      <a href="/profile" style="background-color: rgba(0, 0, 0, .1)">Profile</a>
+       
+           
+      </li>
+    </ul>
+
+    <!-- Left Nav Section -->
+     
+  </section>
+</nav>
+
+    <h1 class="header"><a href="/"> <%= title %></a></h1>
     <h3 class="font"><%= subtitle %></h3>
 
-    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/">Home</a></p>
+     
 
     <div class="row">
       <form id="confess">

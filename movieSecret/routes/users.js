@@ -68,6 +68,12 @@ app.get("/login", function (req, res) {
   });
 });
 
+// Handle request for the log-out
+app.get("/logout", function (req, res) {
+  UserController.logout();
+  res.redirect("/");
+})
+
 // Handle the login action
 app.post("/login", function (req, res) {
 
