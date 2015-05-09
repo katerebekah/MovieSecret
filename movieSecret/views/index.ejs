@@ -8,10 +8,43 @@
   </head>
   <body>
 
-    <h1 class="header"><%= title %></h1>
+  <nav class="top-bar" data-topbar role="navigation" style="background-color: rgba(0, 0, 0, .4)">
+   
+
+  <section class="top-bar-section">
+    <!-- Right Nav Section -->
+    <ul class="right" style="background-color: rgba(0, 0, 0, .1)">
+       
+      <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+        <a href="/user/register" style="background-color: rgba(0, 0, 0, .1)">Register</a>
+       
+           
+      </li>
+      <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+      <a href="/user/login" style="background-color: rgba(0, 0, 0, .1)">Log In</a>
+       
+           
+      </li>
+      <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+      <a href="/profile" style="background-color: rgba(0, 0, 0, .1)">Profile</a>
+      </li>
+       <li class="name" style="background-color: rgba(0, 0, 0, .1)">
+      <a href="/user/logout" style="background-color: rgba(0, 0, 0, .1)">Log Out</a>
+       
+           
+           
+      </li>
+    </ul>
+
+    <!-- Left Nav Section -->
+     
+  </section>
+</nav>
+
+    <h1 class="header"><a href="/"> <%= title %></a></h1>
     <h3 class="font"><%= subtitle %></h3>
 
-    <p><a href="/user/login">Log In</a> | <a href="/user/register">Register</a> | <a href="/profile">Profile</a></p>
+    
     
     <div class="confessions">
     <% for (var i = 0; i < confessions.length; i++) { %>
@@ -34,5 +67,32 @@
     <script>
        $(document).foundation();
      </script>
+     <script src="http://cdn.jsdelivr.net/jquery.validation/1.13.1/jquery.validate.min.js"></script>
+
+     <script>
+$("#commentForm").validate({
+  rules: {
+    username: {
+      required: true,
+    minlength: 7
+    },
+    dueDate: {
+      required: true,
+    dateISO: true
+    },
+   description: {
+      required: true,
+    maxlength: 120
+    },
+  priority: {
+      required: true,
+    max: 10,
+    min: 0
+    },
+
+  }
+});
+</script>
+
   </body>
 </html>
