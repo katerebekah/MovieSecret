@@ -13,7 +13,7 @@ $(function() {
           dData.year = data.Year;
           dData.poster = data.Poster;
           dData.awards = data.Awards;
-          dDate.imdbID = data.imdbID;
+          dData.imdbID = data.imdbID;
           //reformat data for browser display
           var obj = {};
           var arr = [];

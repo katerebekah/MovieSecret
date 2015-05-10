@@ -5,184 +5,135 @@ var router = express.Router();
 var confessionList = [];
 var Confession = require('../models/confession');
 var User = require('../models/user');
-
-// GET request to load edit page with confession to be edited
-router.get('/:id', function(req, res) {
-    console.log("edit called");
-    // Is the user logged in?
-    if (UserController.getCurrentUser() === null) {
-        res.redirect("/user/login");
-    }
-
-    Confession.find({
-        _id: req.params.id
-    }, function(err, item) {
-        var thisItem = item[0];
-        console.log(thisItem);
-
-        // Was there an error when retrieving?
-        if (err) {
-            sendError(req, res, err, "Could not find a task with that id");
-
-            // Find was successful
-        } else {
-            res.render('edit', {
-                title: 'Movie Secret',
-                subtitle: "confess your darkest movie secrets",
-                thisItem: thisItem
-            });
-        }
-    });
-});
-
-//Post Confession to database
-router.post('/', function(req, res, next) {
-    // If user is editing a confession
-    console.log(req.body);
-    if (req.body.db_id) {
-        //Find it
-        Confession.findOne({
-            _id: req.body.db_id
-        }, function(err, foundconfession) {
-            if (err) {
-                sendError(req, res, err, "could not find this confession");
-            } else {
-                //found confession------ update
-                foundconfession.confession = req.body.confession;
-
-                // save updated item
-                foundconfession.save(function(err, newOne) {
-                    if (err) {
-                        sendError(req, res, err, "Could not save with updated Confession");
-                    } else {
-                        console.log("Edit Succesful");
-                        res.redirect('/profile');
-                    }
-
-                });
-            }
-        });
-
-    } else {
-        // User created new item
-        // Find user
-
-        var theUser = UserController.getCurrentUser();
-
-        // What did the user enter in the form?
-        var theFormPostData = req.body
-        theFormPostData.user = theUser._id;
-
-        console.log('theFormPostData', theFormPostData);
-
-        var myconfession = new Confession(theFormPostData);
-
-        myconfession.save(function(err, confession) {
-            if (err) {
-                sendError(req, res, err, "Could not add new confession");
-            } else {
-                console.log("New confession is Saved");
-                res.redirect('/profile');
-            }
-        });
-    }
-});
+var ObjectId = require('mongoose').Types.ObjectId;
 
 
 //get profile page
 router.get('/', function(req, res, next) {
-    var user = UserController.getCurrentUser();
-    console.log(user)
+  var user = UserController.getCurrentUser();
 
-    if (user !== null) {
-        getUserConfessions(user._id).then(function(confessions) {
-            //render the home page profile
-            res.render('profile', {
-                username: user.username,
-                title: 'Movie Secret',
-                subtitle: 'confess your darkest movie secrets',
-                confessions: confessions
-            });
-        });
-    } else {
-        res.redirect("/user/login");
-    }
+  if (user !== null) {
+    getConfessions(user).then(function(foundConfessions) {
+      res.render('profile', {
+        username: user.username,
+        title: 'Movie Secret',
+        subtitle: 'confess your darkest movie secrets',
+        confessions: foundConfessions
+      });
 
-});
-
-// Delete function
-router.delete('/', function(req, res, next) {
-    Confession.find({
-            _id: req.body.confession
-        })
-        .remove(function(err) {
-            if (!err) {
-
-                res.send("Yes we are working");
-
-            } else {
-
-                console.log(err);
-
-
-
-            }
-
-        });
+    }).fail(function(err) {
+      sendError(req, res, {
+        errors: err.message
+      }, "Failed")
+    });
+  } else {
+    res.redirect("/user/login");
+  }
 
 });
 
+//POST new confession
+router.post('/', function(req, res, next) {
+  var user = UserController.getCurrentUser();
+  //console.log("this is the req.body and user", req.body, user); 
+  findConfession(req.body).then(function(confession) {
+    addConfessiontoUser(confession._id, user._id);
+  }).fail(function(err) {
+    console.log(err);
+  });
 
+});
 
 
 // Send the error message back to the client
 var sendError = function(req, res, err, message) {
-    res.render("error", {
-        error: {
-            status: 500,
-            stack: JSON.stringify(err.errors)
-        },
-        message: message
-    });
+  res.render("error", {
+    error: {
+      status: 500,
+      stack: JSON.stringify(err.errors)
+    },
+    message: message
+  });
 };
 
-//tells node to send confessions for initial index page load
-var sendConfessions = function(req, res, next) {
-    Confession.find({}, function(err, confessions) {
-        console.log('confessions:', confessions);
-        if (err) {
-            console.log(err);
-            sendError(req, res, err, "Could not retrieve confessions.")
-        } else {
-            res.render("confessionList", {
-                title: "Movie Secrets",
-                subtitle: "confess your deepest movie secrets",
-                confessions: confessions
-            })
-        }
-    });
+var getConfessions = function(validUser) {
+  var deferred = Q.defer();
+
+  Confession.find({
+    _id: {
+      $in: validUser.confessions.haventSeen
+    }
+  }, function(err, confessions) {
+    if (!err) {
+      deferred.resolve(confessions);
+    } else if (err) {
+      console.log(err);
+      deferred.reject(err);
+
+    }
+  });
+  return deferred.promise;
+
 };
 
+var findConfession = function(con) {
+  var deferred = Q.defer();
 
-var getUserConfessions = function(userId) {
-    var deferred = Q.defer();
+  Confession.findOne({
+    imdbID: confession.imdbID
+  }, function(err, foundConfession) {
+    if (!err) {
+      if (foundConfession) {
+        deferred.resolve(foundConfession);
+      } else {
+        addConfessiontoDB(con);
+      }
+    } else if (err) {
+      console.log(err);
+      deferred.reject(err);
+    }
+  });
+  return deferred.promise;
+};
 
-    console.log('Another promise to let the calling function know when the database lookup is complete');
+var addConfessiontoDB = function(confess) {
+  var newConfession = new Confession(confess);
+  newConfession.save(function(err, confession) {
+    if (err) {
+      console.log(err);
+    } else {
+      return confession;
+    }
+  })
+}
 
-    User.findOne({
-        user: userId
-    }, function(err, user) {
-        if (!err) {
-            console.log('user found:', user);
-            console.log(user.confessions.haventSeen);
-            deferred.resolve(confessions);
-        } else {
-            console.log('There was an error looking up confessions. Reject the promise.');
-            deferred.reject(err);
-        }
-    })
+var addConfessiontoUser = function(userID, confessionID) {
+  var deferred = Q.defer();
 
+  User.findOne({
+    _id: userID
+  }, function(err, user) {
+    console.log('found the user to add a confession')
+    if (err) {
+      console.log(err);
+      deferred.reject(err)
+    } else {
+      deferred.resolve(user)
+    }
     return deferred.promise;
-};
+  }).then(function(user) {
+
+    user.confessions.haventSeen.push(confessionID);
+    user.save(function(err, savedUser) {
+      if (err) {
+        console.log(err);
+        sendError(req, res, err, "can't save user confessions array");
+      } else {
+        console.log("saved user", savedUser)
+        return savedUser;
+      }
+    });
+  });
+}
 
 module.exports = router;

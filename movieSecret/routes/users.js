@@ -6,7 +6,7 @@ var UserModel = require("../models/user");
 var Confession = require("../models/confession");
 
 // Send the error message back to the client
-var sendError = function (req, res, err, message) {
+var sendError = function(req, res, err, message) {
   console.log('Render the error template back to the client.');
   res.render("error", {
     error: {
@@ -18,12 +18,14 @@ var sendError = function (req, res, err, message) {
 };
 
 // Retrieve all tasks for the current user
-var getUserTasks = function (userId) {
+var getUserTasks = function(userId) {
   var deferred = Q.defer();
 
   console.log('Another promise to let the calling function know when the database lookup is complete');
 
-  Confession.find({user: userId}, function (err, tasks) {
+  Confession.find({
+    user: userId
+  }, function(err, tasks) {
     if (!err) {
       console.log('Tasks found = ' + tasks.length);
       console.log('No errors when looking up tasks. Resolve the promise (even if none were found).');
@@ -39,7 +41,7 @@ var getUserTasks = function (userId) {
 
 
 // Handle the request for the registration form
-app.get("/register", function (req, res) {
+app.get("/register", function(req, res) {
   res.render("register", {
     title: "Movie Secret",
     subtitle: "confess your darkest movie secrets"
@@ -48,10 +50,10 @@ app.get("/register", function (req, res) {
 
 
 // Handle the registration form post
-app.post("/register", function (req, res) {
+app.post("/register", function(req, res) {
   var newUser = new UserModel(req.body);
 
-  newUser.save(function (err, user) {
+  newUser.save(function(err, user) {
     if (err) {
       sendError(req, res, err, "Failed to register user");
     } else {
@@ -61,7 +63,7 @@ app.post("/register", function (req, res) {
 });
 
 // Handle the request for the log in form
-app.get("/login", function (req, res) {
+app.get("/login", function(req, res) {
   res.render("login", {
     title: "Movie Secret",
     subtitle: "confess your darkest movie secrets"
@@ -69,57 +71,23 @@ app.get("/login", function (req, res) {
 });
 
 // Handle the login action
-app.post("/login", function (req, res) {
+app.post("/login", function(req, res) {
 
   console.log('Hi, this is Node handling the /user/login route');
 
   // Attempt to log the user is with provided credentials
   UserController.login(req.body.username, req.body.password)
 
-    // After the database call is complete and successful,
-    // the promise returns the user object
-    .then(function (validUser) {
+  // After the database call is complete and successful,
+  // the promise returns the user object
+  .then(function(validUser) {
 
-      console.log('Ok, now we are back in the route handling code and have found a user');
-      console.log('validUser',validUser);
-      console.log('Find any confessions that are assigned to the user');
-
-      // Now find the confessions that belong to the user
-      getUserConfessions(validUser._id)
-        .then(function (confessions) {
-          // Render the profile
-          res.redirect("/profile");
-        })
-        .fail(function (err) {
-          sendError(req, res, {errors: err.message}, "Failed")
-        });
-    })
-
-    // After the database call is complete but failed
-    .fail(function (err) {
-      console.log('Failed looking up the user');
-      sendError(req, res, {errors: err.message}, "Failed")
-    })
+    console.log('Ok, now we are back in the route handling code and have found a user');
+    console.log('leaving usersjs and heading to profilejs');
+    res.redirect('/profile')
+      
+  })
 });
-
-var getUserConfessions = function(userId) {
-    var deferred = Q.defer();
-
-    console.log('Another promise to let the calling function know when the database lookup is complete');
-
-    User.findOne({_id: userId}, function(err, user) {
-        if (!err) {
-            console.log('user found:', user);
-            console.log(user.confessions.haventSeen);
-            deferred.resolve(confessions);
-        } else {
-            console.log('There was an error looking up confessions. Reject the promise.');
-            deferred.reject(err);
-        }
-    })
-
-    return deferred.promise;
-};
 
 
 module.exports = app;
