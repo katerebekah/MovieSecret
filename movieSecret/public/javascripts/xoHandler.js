@@ -4,31 +4,29 @@ $(document).ready(function(){
 	var xButton = $('.xButton');
 
 	oButton.click(function(){
-		var confessionID = $this[0].id;
+		var confessionID = this.id;
 
 		$.ajax({
-			url: '/confession/'+confessionID,
-			method: "PUT",
+			url: '/o',
+			method: "POST",
 			data: {
-				confession: confessionID
+				_id confessionID
 			},
 			success: function (response) {
-				oCount++;
 			}
 		});
 	});
 
 	xButton.click(function(){
-		var confessionID = $this[0].id;
+		var confessionID = this.id;
 
 		$.ajax({
-			url: '/confession/'+confessionID,
-			method: "PUT",
+			url: '/x',
+			method: "POST",
 			data: {
-				confession: confessionID
+				_id: confessionID
 			},
 			success: function (response) {
-				xCount++;
 			}
 		});
 	});

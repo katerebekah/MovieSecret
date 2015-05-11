@@ -9,6 +9,7 @@ $(function() {
         url: "http://www.omdbapi.com/?t=" + request.term + "&r=json&callback",
         dataType: "jsonp",
         success: function(data) {
+          console.log(data)
           //save API data (dummy data until item is selected) for later save with the form
           dData.year = data.Year;
           dData.poster = data.Poster;
@@ -41,6 +42,9 @@ $(function() {
     //create variable to hold all the data to be submitted
     var fdata = {};
     //from the user input
+    if ($('#edit').val()){
+      fdata.edit = $('#edit').val();
+    }
     fdata.confession = $('#confession').val();
     //from the saved API data
     fdata.poster = formData.poster;
@@ -53,7 +57,9 @@ $(function() {
       method: "POST",
       data: fdata,
       success: function(data) {
-        document.location.reload(true);
+        window.location.href = "/profile";
+        $('#confessionsContainer').prepend('<div class="confession row"><div class="large-8 columns right"><h3>I have never seen ' + fdata.confession + ' (' + fdata.year +')</h3><p class="awards">' + fdata.awards + '</p></div><div class="large-4 columns"><img src="'+ fdata.poster + '"></div></div>');
+        
       }
     });
   });

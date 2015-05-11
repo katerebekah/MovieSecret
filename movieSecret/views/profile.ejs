@@ -28,7 +28,7 @@
         </form>
     </div>
 
-    <div class="confessions">
+    <div id="confessionsContainer">
     <% for (var i = 0; i < confessions.length; i++) { %>
       <% var newSecret = confessions[i]; %>
       <div class="confession row" id="<%= newSecret._id %>">
@@ -40,7 +40,7 @@
                   <input type="submit" class="button font deleteButton" id="<%= newSecret._id %>" value="Delete" name="submit">
             </div>
           <div class="large-4 columns">
-              <% if (newSecret.poster !== '') { %>
+              <% if (newSecret.poster !== 'N/A') { %>
               <img src="<%= newSecret.poster %>" alt="<%= newSecret.confession %>">
               <% } %>
           </div>

@@ -11,7 +11,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 //get profile page
 router.get('/', function(req, res, next) {
   var user = UserController.getCurrentUser();
-
   if (user !== null) {
     getConfessions(user).then(function(foundConfessions) {
       res.render('profile', {
@@ -35,15 +34,78 @@ router.get('/', function(req, res, next) {
 //POST new confession
 router.post('/', function(req, res, next) {
   var user = UserController.getCurrentUser();
-  //console.log("this is the req.body and user", req.body, user); 
-  findConfession(req.body).then(function(confession) {
-    addConfessiontoUser(confession._id, user._id);
-  }).fail(function(err) {
-    console.log(err);
-  });
-
+  console.log(req.body);
+  if (req.body.edit) {
+    removeConfession(user, req.body.edit);
+  }
+  Confession.findOne({
+    imdbID: req.body.imdbID
+  }, function(err, result) {
+    if (err){
+      res.send(err);
+    } 
+    if (!result) {
+      addConfessiontoDB(req.body);
+    }
+    if (result) { 
+      addConfessiontoUser(user, result._id)
+    }
+  }).then(function(confession){
+    
+  res.send('thanks for all the fish');
+  })
 });
 
+router.delete('/', function(req, res, next){
+  var user = UserController.getCurrentUser();
+  removeConfession(user, req.body._id);
+  res.send('thanks for all the fish');
+});
+
+router.get('/:id', function(req, res, next){
+  //is the user logged in?
+  var currentUser = UserController.getCurrentUser();
+
+  Confession.find({
+      _id: req.params.id
+  }, function(err, item) {
+      var thisItem = item[0];
+      console.log(thisItem);
+
+      // Was there an error when retrieving?
+      if (err) {
+          sendError(req, res, err, "Could not find a task with that id");
+
+          // Find was successful
+      } else {
+          res.render('edit', {
+              title: 'Movie Secret',
+              subtitle: "confess your darkest movie secrets",
+              thisItem: thisItem
+          });
+      }
+  });
+})
+
+
+//remove item from hasntseen list
+var removeConfession = function (user, confessionID){
+  User.findOne({_id: user._id}, function(err, foundUser){
+    if (err) {
+      sendError(req, res, err, "failed to retrieve user");
+    } else {
+        console.log(foundUser);
+        foundUser.confessions.haventSeen.splice(foundUser.confessions.haventSeen.indexOf(confessionID), 1);
+        foundUser.save(function(err, savedUser) {
+        if (err) {
+            console.log(err);
+            sendError(req, res, err, "Could not save user update");
+          } 
+          return
+          });
+    }
+  })
+}
 
 // Send the error message back to the client
 var sendError = function(req, res, err, message) {
@@ -58,7 +120,6 @@ var sendError = function(req, res, err, message) {
 
 var getConfessions = function(validUser) {
   var deferred = Q.defer();
-
   Confession.find({
     _id: {
       $in: validUser.confessions.haventSeen
@@ -67,7 +128,6 @@ var getConfessions = function(validUser) {
     if (!err) {
       deferred.resolve(confessions);
     } else if (err) {
-      console.log(err);
       deferred.reject(err);
 
     }
@@ -89,7 +149,6 @@ var findConfession = function(con) {
         addConfessiontoDB(con);
       }
     } else if (err) {
-      console.log(err);
       deferred.reject(err);
     }
   });
@@ -102,38 +161,34 @@ var addConfessiontoDB = function(confess) {
     if (err) {
       console.log(err);
     } else {
-      return confession;
+      return confession
     }
+  }).then(function(confession){
+    var endUser = UserController.getCurrentUser()
+      return addConfessiontoUser(endUser, confession._id);
   })
 }
 
-var addConfessiontoUser = function(userID, confessionID) {
-  var deferred = Q.defer();
-
+var addConfessiontoUser = function(user, confessionID) {
   User.findOne({
-    _id: userID
-  }, function(err, user) {
-    console.log('found the user to add a confession')
+    _id: user._id
+  }, function(err, founduser) {
     if (err) {
       console.log(err);
-      deferred.reject(err)
     } else {
-      deferred.resolve(user)
+      founduser.confessions.haventSeen.push(confessionID);
+      founduser.save(function(err, savedUser) {
+        if (err) {
+          console.log(err);
+          sendError(req, res, err, "can't save user confessions array");
+        } else {
+          console.log("this is the saved user,", savedUser)
+          return savedUser;
+          }
+      });
     }
-    return deferred.promise;
-  }).then(function(user) {
+  })
 
-    user.confessions.haventSeen.push(confessionID);
-    user.save(function(err, savedUser) {
-      if (err) {
-        console.log(err);
-        sendError(req, res, err, "can't save user confessions array");
-      } else {
-        console.log("saved user", savedUser)
-        return savedUser;
-      }
-    });
-  });
-}
+};
 
 module.exports = router;
