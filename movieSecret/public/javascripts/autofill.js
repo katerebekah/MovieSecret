@@ -40,6 +40,9 @@ $(function() {
     //create variable to hold all the data to be submitted
     var fdata = {};
     //from the user input
+    if ($('#db_id').val()){
+      fdata._id = $('#db_id').val();
+    }
     fdata.confession = $('#confession').val();
     //from the saved API data
     fdata.poster = formData.poster;
@@ -51,7 +54,7 @@ $(function() {
       method: "POST",
       data: fdata,
       success: function(data) {
-        document.location.reload(true);
+        window.location.href ='/profile';
       }
     });
   });

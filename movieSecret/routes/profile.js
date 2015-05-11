@@ -37,27 +37,34 @@ router.get('/:id', function(req, res) {
 //Post Confession to database
 router.post('/', function(req, res, next) {
     // If user is editing a confession
-    console.log(req.body);
-    if (req.body.db_id) {
+    console.log("this is the req.body", req.body);
+    if (req.body._id) {
+        console.log("editing an existing entry")
         //Find it
         Confession.findOne({
-            _id: req.body.db_id
+            _id: req.body._id
         }, function(err, foundconfession) {
             if (err) {
                 sendError(req, res, err, "could not find this confession");
             } else {
                 //found confession------ update
-                foundconfession.confession = req.body.confession;
-
+                //foundconfession = req.body;
+                console.log('this is the foundconfession', foundconfession);
                 // save updated item
+                foundconfession.confession = req.body.confession;
+                foundconfession.poster = req.body.poster;
+                foundconfession.awards = req.body.awards;
+                foundconfession.year = req.body.year;
                 foundconfession.save(function(err, newOne) {
                     if (err) {
                         sendError(req, res, err, "Could not save with updated Confession");
                     } else {
                         console.log("Edit Succesful");
-                        res.redirect('/profile');
                     }
 
+                }).then(function(confession){
+                    console.log("entering the callback to redirect")
+                        res.send("success")
                 });
             }
         });
@@ -69,7 +76,8 @@ router.post('/', function(req, res, next) {
         var theUser = UserController.getCurrentUser();
 
         // What did the user enter in the form?
-        var theFormPostData = req.body
+        var theFormPostData = req.body;
+        
         theFormPostData.user = theUser._id;
 
         console.log('theFormPostData', theFormPostData);
@@ -81,9 +89,10 @@ router.post('/', function(req, res, next) {
                 sendError(req, res, err, "Could not add new confession");
             } else {
                 console.log("New confession is Saved");
-                res.redirect('/profile');
             }
-        });
+        }).then(function(confession){
+            res.send('success');
+        })
     }
 });
 
