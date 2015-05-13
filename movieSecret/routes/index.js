@@ -59,7 +59,7 @@ router.post('/o', function(req, res, next) {
     UserController.removeXOs(req.body._id);
     UserController.addO(req.body._id);
   } else {
-    res.redirect("/user/login");
+    res.send("this user is not logged in");
   }
 });
 
@@ -68,6 +68,7 @@ var removeUsersCurrentXandOs = function(user, confessionID) {
     _id: user._id
   }, function(err, foundUser) {
     if (foundUser.xedMovies.indexOf(confessionID) >= 0) {
+      console.log("this user has xed this movie before")
       foundUser.xedMovies.splice(foundUser.xedMovies.indexOf(confessionID), 1);
       foundUser.save(function(err, savedUser) {
         if (err) {
@@ -78,6 +79,7 @@ var removeUsersCurrentXandOs = function(user, confessionID) {
         }
       });
     } else if (foundUser.oedMovies.indexOf(confessionID) >= 0) {
+      console.log("this user has oed this movie before")
       foundUser.oedMovies.splice(foundUser.oedMovies.indexOf(confessionID), 1);
       foundUser.save(function(err, savedUser) {
         if (err) {
@@ -88,12 +90,14 @@ var removeUsersCurrentXandOs = function(user, confessionID) {
         }
       });
     } else {
+      console.log("this user has neither xed or oed this movie before")
       return;
     }
   });
 };
 
 var removeXcount = function(confessionID) {
+      console.log("removeXcount initiated")
   Confession.findOne({
     _id: confessionID
   }, function(err, foundConfession) {
@@ -115,6 +119,8 @@ var removeXcount = function(confessionID) {
 };
 
 var removeOcount = function(confessionID) {
+      console.log("removeOcount initiated")
+
   Confession.findOne({
     _id: confessionID
   }, function(err, foundConfession) {
@@ -135,7 +141,8 @@ var removeOcount = function(confessionID) {
   });
 };
 
-var addXcount = function(confessionID, user) {
+var addXcount = function(user, confessionID) {
+      console.log("addXcount initiated with confessionID:", confessionID)
   Confession.findOne({
     _id: confessionID
   }, function(err, foundConfession) {
@@ -149,6 +156,7 @@ var addXcount = function(confessionID, user) {
           console.log(err);
           sendError(req, res, err, "Could not save confession xcount");
         } else {
+          console.log("saved updated xcount, saved confession: ", savedConfession);
           return addUserXed(savedConfession, user);
         }
       });
@@ -156,7 +164,8 @@ var addXcount = function(confessionID, user) {
   });
 };
 
-var addOcount = function(confessionID, user) {
+var addOcount = function(user, confessionID) {
+      console.log("addOcount initiated");
   Confession.findOne({
     _id: confessionID
   }, function(err, foundConfession) {
@@ -164,6 +173,7 @@ var addOcount = function(confessionID, user) {
       console.log(err);
       sendError(req, res, err, "Could not find confession");
     } else {
+      console.log("adding confession's xcount by one")
       foundConfession.oCount = foundConfession.oCount + 1;
       foundConfession.save(function(err, savedConfession) {
         if (err) {
@@ -178,6 +188,8 @@ var addOcount = function(confessionID, user) {
 };
 
 var addUserXed = function(confession, user) {
+      console.log("addUserXed initiated")
+
   User.findOne({
     _id: user._id
   }, function(err, foundUser) {
@@ -185,7 +197,8 @@ var addUserXed = function(confession, user) {
       console.log(err);
       sendError(req, res, err, "Could not find confession");
     } else {
-      foundUser.xedMovies.push(confession);
+      console.log("adding confession to user's xedMovies")
+      foundUser.xedMovies.push(confession._id);
       foundUser.save(function(err, savedUser) {
         if (err) {
           console.log(err);
@@ -199,6 +212,7 @@ var addUserXed = function(confession, user) {
 };
 
 var addUserOed = function(confession, user) {
+      console.log("addUserOed initiated")
   User.findOne({
     _id: user._id
   }, function(err, foundUser) {
@@ -206,7 +220,8 @@ var addUserOed = function(confession, user) {
       console.log(err);
       sendError(req, res, err, "Could not find user");
     } else {
-      foundUser.oedMovies.push(confession);
+      console.log("adding confession to user's xedMovies")
+      foundUser.oedMovies.push(confession._id);
       foundUser.save(function(err, savedUser) {
         if (err) {
           console.log(err);
