@@ -13,7 +13,7 @@ $(document).ready(function(){
 				_id: confessionID
 			},
 			success: function (response) {
-				console.log('thanks');
+        window.location.href = "/#" + confessionID;
 			}
 		});
 	});
@@ -28,7 +28,7 @@ $(document).ready(function(){
 				_id: confessionID
 			},
 			success: function (response) {
-				console.log('thanks');
+        window.location.href = "/#" + confessionID;
 			}
 		});
 	});

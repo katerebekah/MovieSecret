@@ -59,18 +59,26 @@ User.prototype.removeConfession = function (confession){
 };
 
 User.prototype.addX = function(confession){
+  console.log("made it to user controller addx");
   this.currentUser.xedMovies.push(confession);
+  return
 }
 
 User.prototype.addO = function(confession){
+  console.log("made it to user controller addo");
   this.currentUser.oedMovies.push(confession);
+  return
 }
 
 User.prototype.removeXOs = function(confession){
+  console.log("made it to user controller");
   if (this.currentUser.xedMovies.indexOf(confession) >= 0) {
+    console.log("user controller had an xed");
     this.currentUser.xedMovies.splice(this.currentUser.oedMovies.indexOf(confession), 1);
   } else if (this.currentUser.oedMovies.indexOf(confession) >= 0) {
+    console.log("user controller had an oed");
     this.currentUser.oedMovies.splice(this.currentUser.oedMovies.indexOf(confession), 1);
   }
+  return
 }
 module.exports = new User();

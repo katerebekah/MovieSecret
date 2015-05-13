@@ -16,6 +16,7 @@
     <div class="confessions">
     <% for (var i = 0; i < confessions.length; i++) { %>
       <% var newSecret = confessions[i]; %>
+      <a name="<%=newSecret._id%>"></a>
       <div class="confession row" id="<%= newSecret._id %>">
         <div class="large-8 columns right">
                 <h3>I have never seen <%= newSecret.confession %><% if (newSecret.year !== '') { %> (<%= newSecret.year %>)<% }%> </h3>

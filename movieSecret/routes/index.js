@@ -44,6 +44,7 @@ router.post('/x', function(req, res, next) {
     addXcount(ourUser, confessionID);
     UserController.removeXOs(confessionID);
     UserController.addX(confessionID);
+  res.send("successful");
   } else {
     res.redirect("/user/login");
   }
@@ -58,6 +59,7 @@ router.post('/o', function(req, res, next) {
     addOcount(ourUser, confessionID);
     UserController.removeXOs(req.body._id);
     UserController.addO(req.body._id);
+    res.send("successful");
   } else {
     res.send("this user is not logged in");
   }
@@ -97,7 +99,6 @@ var removeUsersCurrentXandOs = function(user, confessionID) {
 };
 
 var removeXcount = function(confessionID) {
-      console.log("removeXcount initiated")
   Confession.findOne({
     _id: confessionID
   }, function(err, foundConfession) {
@@ -111,6 +112,7 @@ var removeXcount = function(confessionID) {
           console.log(err);
           sendError(req, res, err, "Could not save confession xcount");
         } else {
+      console.log("removeXcount completed", savedConfession.xCount)
           return;
         }
       });
@@ -119,7 +121,6 @@ var removeXcount = function(confessionID) {
 };
 
 var removeOcount = function(confessionID) {
-      console.log("removeOcount initiated")
 
   Confession.findOne({
     _id: confessionID
@@ -134,6 +135,7 @@ var removeOcount = function(confessionID) {
           console.log(err);
           sendError(req, res, err, "Could not save confession ocount");
         } else {
+      console.log("removeOcount completed", savedConfession.oCount)
           return
         }
       });
@@ -173,13 +175,13 @@ var addOcount = function(user, confessionID) {
       console.log(err);
       sendError(req, res, err, "Could not find confession");
     } else {
-      console.log("adding confession's xcount by one")
       foundConfession.oCount = foundConfession.oCount + 1;
       foundConfession.save(function(err, savedConfession) {
         if (err) {
           console.log(err);
           sendError(req, res, err, "Could not save confession ocount");
         } else {
+      console.log("adding confession's xcount by one", savedConfession)
           return addUserOed(savedConfession, user);
         }
       });
@@ -188,7 +190,7 @@ var addOcount = function(user, confessionID) {
 };
 
 var addUserXed = function(confession, user) {
-      console.log("addUserXed initiated")
+      console.log("addUserXed initiated, ", user)
 
   User.findOne({
     _id: user._id
@@ -197,14 +199,14 @@ var addUserXed = function(confession, user) {
       console.log(err);
       sendError(req, res, err, "Could not find confession");
     } else {
-      console.log("adding confession to user's xedMovies")
       foundUser.xedMovies.push(confession._id);
       foundUser.save(function(err, savedUser) {
         if (err) {
           console.log(err);
           sendError(req, res, err, "Could not save confession");
         } else {
-          return
+          console.log("added confession to user's xedMovies -- returning", savedUser)
+          return;
         }
       });
     }
@@ -220,13 +222,13 @@ var addUserOed = function(confession, user) {
       console.log(err);
       sendError(req, res, err, "Could not find user");
     } else {
-      console.log("adding confession to user's xedMovies")
       foundUser.oedMovies.push(confession._id);
       foundUser.save(function(err, savedUser) {
         if (err) {
           console.log(err);
           sendError(req, res, err, "Could not save user");
         } else {
+          console.log("saving confession to user's oedMovies,", savedUser);
           return
         }
       });
