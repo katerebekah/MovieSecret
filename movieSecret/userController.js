@@ -50,4 +50,27 @@ User.prototype.getCurrentUser = function () {
   return this.currentUser;
 };
 
+User.prototype.addConfession = function (confession) {
+  this.currentUser.confessions.haventSeen.push(confession);
+};
+
+User.prototype.removeConfession = function (confession){
+  this.currentUser.confessions.haventSeen.splice(this.currentUser.confessions.haventSeen.indexOf(confession), 1);
+};
+
+User.prototype.addX = function(confession){
+  this.currentUser.xedMovies.push(confession);
+}
+
+User.prototype.addO = function(confession){
+  this.currentUser.oedMovies.push(confession);
+}
+
+User.prototype.removeXOs = function(confession){
+  if (this.currentUser.xedMovies.indexOf(confession) >= 0) {
+    this.currentUser.xedMovies.splice(this.currentUser.oedMovies.indexOf(confession), 1);
+  } else if (this.currentUser.oedMovies.indexOf(confession) >= 0) {
+    this.currentUser.oedMovies.splice(this.currentUser.oedMovies.indexOf(confession), 1);
+  }
+}
 module.exports = new User();

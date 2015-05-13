@@ -5,21 +5,22 @@ $(document).ready(function(){
 
 	oButton.click(function(){
 		var confessionID = this.id;
-
+		console.log("obutton fired and this is the id", confessionID)
 		$.ajax({
 			url: '/o',
 			method: "POST",
 			data: {
-				_id confessionID
+				_id: confessionID
 			},
 			success: function (response) {
+				console.log('thanks');
 			}
 		});
 	});
 
 	xButton.click(function(){
 		var confessionID = this.id;
-
+		console.log("xbutton fired and this is the id", confessionID);
 		$.ajax({
 			url: '/x',
 			method: "POST",
@@ -27,6 +28,7 @@ $(document).ready(function(){
 				_id: confessionID
 			},
 			success: function (response) {
+				console.log('thanks');
 			}
 		});
 	});

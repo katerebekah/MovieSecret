@@ -1,8 +1,11 @@
+var Q = require("q");
+var UserController = require('../userController');
 var express = require('express');
 var router = express.Router();
+var confessionList = [];
 var Confession = require('../models/confession');
-
-
+var User = require('../models/user');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 // Send the error message back to the client
 var sendError = function(req, res, err, message) {
@@ -35,23 +38,29 @@ router.get('/', function(req, res, next) {
 router.post('/x', function(req, res, next) {
   //is the user logged in?
   var ourUser = UserController.getCurrentUser();
-  if (ourUser === null) {
+  if (ourUser !== null) {
+    var confessionID = req.body._id;
+    removeUsersCurrentXandOs(ourUser, confessionID);
+    addXcount(ourUser, confessionID);
+    UserController.removeXOs(confessionID);
+    UserController.addX(confessionID);
+  } else {
     res.redirect("/user/login");
   }
-  var confessionID = req.body._id;
-  removeUsersCurrentXandOs(ourUser, confessionID);
-  addXcount(ourUser, confessionID);
 });
 
 router.post('/o', function(req, res, next) {
   //is the user logged in?
   var ourUser = UserController.getCurrentUser();
-  if (ourUser === null) {
+  if (ourUser !== null) {
+    var confessionID = req.body._id;
+    removeUsersCurrentXandOs(ourUser, confessionID);
+    addOcount(ourUser, confessionID);
+    UserController.removeXOs(req.body._id);
+    UserController.addO(req.body._id);
+  } else {
     res.redirect("/user/login");
   }
-  var confessionID = req.body._id;
-  removeUsersCurrentXandOs(ourUser, confessionID);
-  addXcount(ourUser, confessionID);
 });
 
 var removeUsersCurrentXandOs = function(user, confessionID) {

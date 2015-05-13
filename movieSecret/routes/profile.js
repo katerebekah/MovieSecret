@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
   var user = UserController.getCurrentUser();
   if (user !== null) {
     getConfessions(user).then(function(foundConfessions) {
+      console.log('foundConfessions',foundConfessions);
       res.render('profile', {
         username: user.username,
         title: 'Movie Secret',
@@ -37,28 +38,31 @@ router.post('/', function(req, res, next) {
   console.log(req.body);
   if (req.body.edit) {
     removeConfession(user, req.body.edit);
+    UserController.removeConfession(req.body.edit);
   }
   Confession.findOne({
     imdbID: req.body.imdbID
   }, function(err, result) {
     if (err){
       res.send(err);
-    } 
+    }
     if (!result) {
-      addConfessiontoDB(req.body);
+      addConfessiontoDB(req.body).then(function(user) {
+        res.send(JSON.stringify(user));
+      });
     }
-    if (result) { 
-      addConfessiontoUser(user, result._id)
+    if (result) {
+      addConfessiontoUser(user, result._id).then(function(user) {
+        res.send(JSON.stringify(user));
+      });
     }
-  }).then(function(confession){
-    
-  res.send('thanks for all the fish');
-  })
+  });
 });
 
 router.delete('/', function(req, res, next){
   var user = UserController.getCurrentUser();
   removeConfession(user, req.body._id);
+  UserController.removeConfession(req.body._id);
   res.send('thanks for all the fish');
 });
 
@@ -100,7 +104,7 @@ var removeConfession = function (user, confessionID){
         if (err) {
             console.log(err);
             sendError(req, res, err, "Could not save user update");
-          } 
+          }
           return
           });
     }
@@ -120,6 +124,9 @@ var sendError = function(req, res, err, message) {
 
 var getConfessions = function(validUser) {
   var deferred = Q.defer();
+
+  console.log('validUser.confessions.haventSeen',validUser.confessions.haventSeen);
+
   Confession.find({
     _id: {
       $in: validUser.confessions.haventSeen
@@ -156,20 +163,33 @@ var findConfession = function(con) {
 };
 
 var addConfessiontoDB = function(confess) {
+  var deferred = Q.defer();
+
+  console.log('addConfessiontoDB start');
+
   var newConfession = new Confession(confess);
+
   newConfession.save(function(err, confession) {
+    console.log('after save in addConfessiontoDB');
+
     if (err) {
       console.log(err);
     } else {
-      return confession
+      var endUser = UserController.getCurrentUser()
+      addConfessiontoUser(endUser, confession._id).then(function(user) {
+        console.log('addConfessiontoUser promise resolved');
+        deferred.resolve(user);
+      });
     }
-  }).then(function(confession){
-    var endUser = UserController.getCurrentUser()
-      return addConfessiontoUser(endUser, confession._id);
-  })
+
+  });
+
+  return deferred.promise;
 }
 
 var addConfessiontoUser = function(user, confessionID) {
+  var deferred = Q.defer();
+
   User.findOne({
     _id: user._id
   }, function(err, founduser) {
@@ -177,18 +197,22 @@ var addConfessiontoUser = function(user, confessionID) {
       console.log(err);
     } else {
       founduser.confessions.haventSeen.push(confessionID);
+
       founduser.save(function(err, savedUser) {
         if (err) {
           console.log(err);
           sendError(req, res, err, "can't save user confessions array");
         } else {
-          console.log("this is the saved user,", savedUser)
-          return savedUser;
+          UserController.addConfession(confessionID);
+          console.log("this is the saved user,", savedUser);
+          deferred.resolve(savedUser);
+          // return savedUser;
           }
       });
     }
   })
 
+  return deferred.promise;
 };
 
 module.exports = router;

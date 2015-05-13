@@ -58,8 +58,6 @@ $(function() {
       data: fdata,
       success: function(data) {
         window.location.href = "/profile";
-        $('#confessionsContainer').prepend('<div class="confession row"><div class="large-8 columns right"><h3>I have never seen ' + fdata.confession + ' (' + fdata.year +')</h3><p class="awards">' + fdata.awards + '</p></div><div class="large-4 columns"><img src="'+ fdata.poster + '"></div></div>');
-        
       }
     });
   });
